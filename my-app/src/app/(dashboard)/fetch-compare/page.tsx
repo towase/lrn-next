@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
-const EXTERNAL_API_URL = "https://jsonplaceholder.typicode.com/todos/1";
+const EXTERNAL_API_URL = "https://httpbin.org/uuid";
 
 type FetchMode = "force-cache" | "no-store" | "revalidate-30s";
 
@@ -30,8 +30,12 @@ export default async function FetchComparePage() {
           外部 API fetch 比較
         </h1>
         <p className="text-sm text-zinc-600">
-          同じ API を cache 設定別に取得し、挙動差を確認する Day2
-          用のページです。
+          毎回値が変わる外部 API を cache
+          設定別に取得し、リロード時の差分を確認します。
+        </p>
+        <p className="text-xs text-zinc-500">
+          期待値: force-cache は固定、no-store は毎回変化、revalidate-30s
+          は30秒以内なら固定
         </p>
       </div>
 
