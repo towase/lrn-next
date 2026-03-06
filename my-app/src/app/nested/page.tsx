@@ -5,7 +5,8 @@ export default function NestedHomePage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold text-blue-900">/nested のページ</h1>
       <p className="text-blue-800">
-        このページは <code>src/app/nested/layout.tsx</code> のレイアウト（青系）で囲まれています。
+        このページは <code>src/app/nested/layout.tsx</code>{" "}
+        のレイアウト（青系）で囲まれています。
       </p>
       <div>
         <Link
@@ -18,4 +19,3 @@ export default function NestedHomePage() {
     </div>
   );
 }
-

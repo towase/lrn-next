@@ -47,7 +47,10 @@ export default function LrnNestedPage() {
         </div>
 
         <div>
-          <Link href="/" className="text-sm text-zinc-600 hover:underline dark:text-zinc-400">
+          <Link
+            href="/"
+            className="text-sm text-zinc-600 hover:underline dark:text-zinc-400"
+          >
             トップへ戻る
           </Link>
         </div>
@@ -55,4 +58,3 @@ export default function LrnNestedPage() {
     </div>
   );
 }
-
