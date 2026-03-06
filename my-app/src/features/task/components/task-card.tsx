@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TaskEntity } from "@/features/task/types";
-import { TASK_STATUS_LABEL } from "@/features/task/types";
 import { formatDate } from "@/utils/format-date";
 
 type TaskCardProps = {
@@ -29,9 +28,6 @@ export function TaskCard({
               ) : null}
               <p className="text-xs text-zinc-500">
                 作成: {formatDate(task.createdAt)}
-              </p>
-              <p className="text-xs text-zinc-500">
-                現在: {TASK_STATUS_LABEL[task.status]}
               </p>
             </div>
             <div className="flex items-center gap-2">{deleteControl}</div>

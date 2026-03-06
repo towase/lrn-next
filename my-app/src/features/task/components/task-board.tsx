@@ -33,7 +33,11 @@ async function TaskList() {
               key={task.id}
               task={task}
               statusControl={
-                <TaskStatusForm id={task.id} status={task.status} />
+                <TaskStatusForm
+                  key={`${task.id}:${task.status}`}
+                  id={task.id}
+                  status={task.status}
+                />
               }
               deleteControl={<TaskDeleteButton id={task.id} />}
             />
