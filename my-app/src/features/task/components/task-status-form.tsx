@@ -27,7 +27,7 @@ export function TaskStatusForm({ id, status }: TaskStatusFormProps) {
           </option>
         ))}
       </select>
-      <Button type="submit" variant="secondary">
+      <Button type="submit" variant="secondary" size="xs">
         更新
       </Button>
     </form>
