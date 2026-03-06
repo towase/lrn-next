@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import type { TaskEntity } from "@/entities/task/model/types";
-import { TASK_STATUS_LABEL } from "@/entities/task/model/types";
+import type { TaskEntity } from "@/features/task/types";
+import { TASK_STATUS_LABEL } from "@/features/task/types";
+import { formatDate } from "@/utils/format-date";
 
 type TaskCardProps = {
   task: TaskEntity;
@@ -33,14 +34,4 @@ export function TaskCard({
       <div className="mt-3">{statusControl}</div>
     </li>
   );
-}
-
-function formatDate(value: Date) {
-  return new Intl.DateTimeFormat("ja-JP", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(value);
 }

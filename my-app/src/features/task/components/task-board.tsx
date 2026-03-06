@@ -1,8 +1,8 @@
-import { getTasks } from "@/entities/task/api/task-repository";
-import { TaskCard } from "@/entities/task/ui/task-card";
-import { TaskCreateForm } from "@/features/task-create/ui/task-create-form";
-import { TaskDeleteButton } from "@/features/task-delete/ui/task-delete-button";
-import { TaskStatusForm } from "@/features/task-status/ui/task-status-form";
+import { TaskCard } from "@/features/task/components/task-card";
+import { TaskCreateForm } from "@/features/task/components/task-create-form";
+import { TaskDeleteButton } from "@/features/task/components/task-delete-button";
+import { TaskStatusForm } from "@/features/task/components/task-status-form";
+import { getTasks } from "@/features/task/repository";
 
 export async function TaskBoard() {
   const tasks = await getTasks();

@@ -7,7 +7,7 @@ import {
   createTask,
   deleteTaskById,
   updateTaskStatusById,
-} from "@/entities/task/api/task-repository";
+} from "@/features/task/repository";
 
 const createTaskSchema = z.object({
   title: z.string().trim().min(1).max(120),

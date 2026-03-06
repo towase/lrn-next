@@ -1,4 +1,5 @@
-import { createTaskAction } from "@/features/task-crud/model/actions";
+import { Button } from "@/components/ui/button";
+import { createTaskAction } from "@/features/task/actions";
 
 export function TaskCreateForm() {
   return (
@@ -35,12 +36,9 @@ export function TaskCreateForm() {
           className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-900"
         />
       </div>
-      <button
-        type="submit"
-        className="inline-flex w-fit rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700"
-      >
+      <Button type="submit" className="w-fit">
         タスクを追加
-      </button>
+      </Button>
     </form>
   );
 }

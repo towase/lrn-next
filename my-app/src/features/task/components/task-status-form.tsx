@@ -1,6 +1,7 @@
 import type { TaskStatus } from "@prisma/client";
-import { TASK_STATUS_OPTIONS } from "@/entities/task/model/types";
-import { updateTaskStatusAction } from "@/features/task-crud/model/actions";
+import { Button } from "@/components/ui/button";
+import { updateTaskStatusAction } from "@/features/task/actions";
+import { TASK_STATUS_OPTIONS } from "@/features/task/types";
 
 type TaskStatusFormProps = {
   id: string;
@@ -26,12 +27,9 @@ export function TaskStatusForm({ id, status }: TaskStatusFormProps) {
           </option>
         ))}
       </select>
-      <button
-        type="submit"
-        className="rounded-md border border-zinc-300 px-2 py-1 text-xs font-medium text-zinc-700 hover:bg-zinc-100"
-      >
+      <Button type="submit" variant="secondary">
         更新
-      </button>
+      </Button>
     </form>
   );
 }

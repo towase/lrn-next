@@ -41,33 +41,32 @@ pnpm db:push      # スキーマをDBへ反映
 pnpm db:studio    # Prisma Studio起動
 ```
 
-## FSDディレクトリ構成
+## ディレクトリ構成
 
 ```txt
 src/
   app/
-    (dashboard)/
-      tasks/
-  entities/
-    task/
-      api/
-      model/
-      ui/
+  components/
+    layouts/
+    ui/
   features/
-    task-create/
-    task-status/
-    task-delete/
-    task-crud/
-  widgets/
-    task-board/
-  shared/
-    lib/
+    task/
+  hooks/
+  lib/
+  utils/
+e2e/
+testing/
 ```
 
-- `entities`: ドメイン（Task）
-- `features`: ユースケース（作成/更新/削除）
-- `widgets`: 画面のまとまり（TaskBoard）
-- `app`: ルーティングとレイアウト
+- `src/app`: Next.jsのApp Router
+- `src/components/layouts`: レイアウトコンポーネント
+- `src/components/ui`: 汎用UI
+- `src/features`: 機能単位のコード
+- `src/hooks`: 汎用Hook
+- `src/lib`: ライブラリラッパー
+- `src/utils`: 汎用ユーティリティ
+- `e2e`: E2Eテスト
+- `testing`: テスト用セットアップ/ユーティリティ
 
 ## 現在の実装範囲
 
@@ -75,4 +74,3 @@ src/
 - タスクのステータス更新
 - タスクの削除
 - Server Actions + `revalidatePath("/tasks")`
-

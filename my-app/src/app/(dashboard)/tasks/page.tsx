@@ -1,4 +1,4 @@
-import { TaskBoard } from "@/widgets/task-board/ui/task-board";
+import { TaskBoard } from "@/features/task/components/task-board";
 
 export const dynamic = "force-dynamic";
 
