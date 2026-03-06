@@ -16,7 +16,7 @@ const createTaskSchema = z.object({
 
 const updateTaskStatusSchema = z.object({
   id: z.string().min(1),
-  status: z.nativeEnum(TaskStatus),
+  status: z.enum(TaskStatus),
 });
 
 const deleteTaskSchema = z.object({
