@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TaskEntity } from "@/features/task/types";
@@ -20,9 +21,12 @@ export function TaskCard({
         <CardContent className="space-y-3">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1">
-              <p className="text-sm font-semibold text-zinc-900">
+              <Link
+                href={`/tasks/${task.id}`}
+                className="text-sm font-semibold text-zinc-900 underline-offset-2 hover:underline"
+              >
                 {task.title}
-              </p>
+              </Link>
               {task.description ? (
                 <p className="text-sm text-zinc-600">{task.description}</p>
               ) : null}

@@ -9,6 +9,12 @@ export default function Home() {
       href: "/tasks",
     },
     {
+      title: "外部 API fetch 比較",
+      description:
+        "force-cache / no-store / revalidate の違いを確認する学習ページです。",
+      href: "/fetch-compare",
+    },
+    {
       title: "ネストされた layout.tsx の例",
       description: "親/子レイアウトの適用範囲を確認できます。",
       href: "/lrn-nested",

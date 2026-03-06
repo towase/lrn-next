@@ -12,6 +12,12 @@ export async function getTasks() {
   });
 }
 
+export async function getTaskById(id: string) {
+  return prisma.task.findUnique({
+    where: { id },
+  });
+}
+
 export async function createTask(input: CreateTaskInput) {
   return prisma.task.create({
     data: {

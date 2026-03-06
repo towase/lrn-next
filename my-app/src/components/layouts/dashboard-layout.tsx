@@ -17,6 +17,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             >
               タスク
             </Link>
+            <Link
+              href="/fetch-compare"
+              className="rounded-md px-2 py-1 hover:bg-zinc-100"
+            >
+              fetch比較
+            </Link>
             <Link href="/" className="rounded-md px-2 py-1 hover:bg-zinc-100">
               ホーム
             </Link>
