@@ -49,8 +49,22 @@ function TaskListSkeleton() {
     <div className="grid gap-3">
       <h2 className="text-lg font-semibold text-zinc-900">タスク一覧</h2>
       <div className="grid gap-3">
-        <div className="h-28 animate-pulse rounded-xl border border-zinc-200 bg-zinc-100" />
-        <div className="h-28 animate-pulse rounded-xl border border-zinc-200 bg-zinc-100" />
+        <div className="animate-in fade-in-0 slide-in-from-bottom-1 duration-300 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <div className="space-y-3">
+            <div className="h-4 w-40 animate-pulse rounded bg-zinc-200" />
+            <div className="h-3 w-64 animate-pulse rounded bg-zinc-100" />
+            <div className="h-3 w-32 animate-pulse rounded bg-zinc-100" />
+            <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-100" />
+          </div>
+        </div>
+        <div className="animate-in fade-in-0 slide-in-from-bottom-1 duration-500 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm">
+          <div className="space-y-3">
+            <div className="h-4 w-36 animate-pulse rounded bg-zinc-200" />
+            <div className="h-3 w-56 animate-pulse rounded bg-zinc-100" />
+            <div className="h-3 w-28 animate-pulse rounded bg-zinc-100" />
+            <div className="h-8 w-28 animate-pulse rounded-md bg-zinc-100" />
+          </div>
+        </div>
       </div>
     </div>
   );
