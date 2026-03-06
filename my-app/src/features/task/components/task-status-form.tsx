@@ -19,7 +19,7 @@ export function TaskStatusForm({ id, status }: TaskStatusFormProps) {
         id={`status-${id}`}
         name="status"
         defaultValue={status}
-        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs"
+        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900"
       >
         {TASK_STATUS_OPTIONS.map((item) => (
           <option key={item.value} value={item.value}>
