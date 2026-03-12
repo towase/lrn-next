@@ -16,8 +16,8 @@
 - [x] (2026-03-12 12:25 JST) Day2 外部 API fetch 比較ページを追加済み（`/fetch-compare`）。
 - [x] (2026-03-12 12:25 JST) Day3 `tasks/[id]` と `generateMetadata`、一覧→詳細導線を追加済み。
 - [x] (2026-03-12 12:25 JST) Server Actions のエラーハンドリング（create/update/delete の戻り値統一、UI表示）を追加済み。
-- [ ] Day8 Middleware で `/tasks` と配下ルートの保護を実装。
-- [ ] Day8 擬似ログイン/ログアウト導線を追加し、cookie ベース制御を確認。
+- [x] (2026-03-12 15:10 JST) Day8 Middleware で `/tasks` と配下ルートの保護を実装。
+- [x] (2026-03-12 15:10 JST) Day8 擬似ログイン/ログアウト導線を追加し、cookie ベース制御を確認。
 - [ ] Day9 Vercel デプロイ前提の設定確認（環境変数・DB接続・ビルド確認手順）を文書化。
 - [ ] Day10 bundle 分析を実施し、主要ボトルネック候補と対策を整理。
 - [ ] 最終の総合検証（`pnpm lint`、`pnpm build`、主要画面確認）を実施。
@@ -30,6 +30,9 @@
 - Observation: `httpbin.org/uuid` へ切り替えると `force-cache` と `no-store` の差が視認しやすくなった。
   Evidence: `/fetch-compare` で `no-store` の UUID がリロードごとに変化し、`force-cache` は同値を維持。
 
+- Observation: Proxy を `/tasks/:path*` に限定することで、学習用ページ（`/fetch-compare` など）は認証不要のまま維持できた。
+  Evidence: `matcher` を限定した `proxy.ts` 追加後も `next build` で通常ルートが維持され、`/tasks` 系のみ保護対象になった。
+
 ## Decision Log
 
 - Decision: 進捗管理は Day 単位の分割ファイルではなく、ロードマップ全体を 1 ファイルに集約する。
@@ -40,9 +43,13 @@
   Rationale: 学習目的は Middleware 制御の理解であり、外部認証基盤の導入はスコープ外のため。
   Date/Author: 2026-03-12 / Codex
 
+- Decision: ログイン入口は `/auth` に分離し、未認証時は `?next=` を付与して遷移先を保持する。
+  Rationale: `/tasks` 保護の挙動を単純に保ちつつ、ログイン後に元のページへ戻す導線を学習しやすくするため。
+  Date/Author: 2026-03-12 / Codex
+
 ## Outcomes & Retrospective
 
-現時点では最終完了前です。Day8-10 の実装が終わり次第、達成内容、残課題、学びをここに追記します。
+Day8 は完了しました。`/tasks` 系は未認証アクセス時に `/auth` へリダイレクトされ、`auth-token` cookie 発行後のみ閲覧可能です。残作業は Day9（デプロイ前提整理）と Day10（bundle 分析）です。
 
 ## Context and Orientation
 
@@ -59,7 +66,7 @@
 
 ## Plan of Work
 
-まず Day8 として `my-app/middleware.ts` を追加し、`/tasks` 系ルートへのアクセス時に cookie を確認して未認証アクセスを遮断します。次にログイン・ログアウトの最小導線を既存 UI へ追加し、保護動作をブラウザで検証します。
+まず Day8 として `my-app/src/proxy.ts` を追加し、`/tasks` 系ルートへのアクセス時に cookie を確認して未認証アクセスを遮断します。次にログイン・ログアウトの最小導線を既存 UI へ追加し、保護動作をブラウザで検証します。
 
 続いて Day9 として、Vercel デプロイに必要な前提をこのリポジトリの現状に合わせて整理します。具体的には環境変数、Prisma/Postgres 接続、ビルド観点をチェックし、再現可能な手順に落とし込みます。
 
@@ -109,12 +116,25 @@
 - `lint/build` 成功ログ要点
 - bundle 分析の要点（どのファイルが重いか）
 
+Day8 実装時点の記録:
+
+- 主要差分ファイル:
+  - `my-app/src/proxy.ts`
+  - `my-app/src/app/auth/page.tsx`
+  - `my-app/src/features/auth/actions.ts`
+  - `my-app/src/features/auth/constants.ts`
+  - `my-app/src/components/layouts/dashboard-layout.tsx`
+  - `my-app/src/app/page.tsx`
+- 検証ログ要点:
+  - `pnpm lint`: `Checked 46 files ... No fixes applied.`
+  - `pnpm build`: `✓ Compiled successfully`、`ƒ /auth` と `ƒ Proxy (Middleware)` を確認。
+
 ## Interfaces and Dependencies
 
 この計画で主要に扱うインターフェースは次の通りです。
 
-- `my-app/middleware.ts`
-  - `export function middleware(request: NextRequest): NextResponse`
+- `my-app/src/proxy.ts`
+  - `export function proxy(request: NextRequest): NextResponse`
   - `export const config = { matcher: ["/tasks/:path*"] }`
 - `next/headers` の `cookies()` API
   - ログイン時 `set`
@@ -126,3 +146,4 @@
 ## Change Notes
 
 - 2026-03-12: 新規作成。理由は「学習ロードマップ完走までを 1 つの ExecPlan で追跡するため」。
+- 2026-03-12: Day8 完了を反映。理由は「`/tasks` 保護と擬似認証導線の実装・検証が完了したため」。

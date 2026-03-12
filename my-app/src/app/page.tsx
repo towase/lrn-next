@@ -15,6 +15,11 @@ export default function Home() {
       href: "/fetch-compare",
     },
     {
+      title: "擬似ログイン",
+      description: "Day8 Middleware 学習用のログインページです。",
+      href: "/auth",
+    },
+    {
       title: "ネストされた layout.tsx の例",
       description: "親/子レイアウトの適用範囲を確認できます。",
       href: "/lrn-nested",
