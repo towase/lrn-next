@@ -1,107 +1,107 @@
-# Codex Execution Plans (ExecPlans):
+# Codex 実行計画（ExecPlans）
 
-This document describes the requirements for an execution plan ("ExecPlan"), a design document that a coding agent can follow to deliver a working feature or system change. Treat the reader as a complete beginner to this repository: they have only the current working tree and the single ExecPlan file you provide. There is no memory of prior plans and no external context.
+この文書は、実行計画（"ExecPlan"）の要件を定義します。ExecPlan は、コーディングエージェントが実際に動作する機能追加やシステム変更を実装するために従う設計文書です。読者はこのリポジトリの完全な初学者である前提で書いてください。読者が持つ情報は、現在のワーキングツリーと、あなたが提供する 1 つの ExecPlan ファイルだけです。過去の計画の記憶や外部コンテキストは存在しません。
 
-## How to use ExecPlans and PLANS.md
+## ExecPlans と PLANS.md の使い方
 
-When authoring an executable specification (ExecPlan), follow PLANS.md _to the letter_. If it is not in your context, refresh your memory by reading the entire PLANS.md file. Be thorough in reading (and re-reading) source material to produce an accurate specification. When creating a spec, start from the skeleton and flesh it out as you do your research.
+実行可能な仕様（ExecPlan）を作成する際は、PLANS.md の指示に _厳密に_ 従ってください。もし内容が手元のコンテキストにない場合は、PLANS.md 全体を読み直して記憶を更新してください。正確な仕様を作るため、関連ソースは丁寧に読み込み（必要なら再読し）ましょう。仕様を書くときは、まず骨子から始め、調査を進めながら具体化してください。
 
-When implementing an executable specification (ExecPlan), do not prompt the user for "next steps"; simply proceed to the next milestone. Keep all sections up to date, add or split entries in the list at every stopping point to affirmatively state the progress made and next steps. Resolve ambiguities autonomously, and commit frequently.
+実行可能な仕様（ExecPlan）を実装する際は、ユーザーに「次にどうしますか」と確認しないでください。次のマイルストーンへそのまま進んでください。すべてのセクションを最新状態に保ち、各停止点で進捗と次の作業が明確になるようにリスト項目を追加または分割してください。曖昧さは自律的に解消し、コミットは高頻度で行ってください。
 
-When discussing an executable specification (ExecPlan), record decisions in a log in the spec for posterity; it should be unambiguously clear why any change to the specification was made. ExecPlans are living documents, and it should always be possible to restart from _only_ the ExecPlan and no other work.
+実行可能な仕様（ExecPlan）について議論する際は、後から追跡できるように仕様内のログへ意思決定を記録してください。なぜ仕様変更が必要だったのかが曖昧さなく分かる必要があります。ExecPlan は生きた文書であり、_ExecPlan だけ_ を使っていつでも作業再開できる状態を維持してください。
 
-When researching a design with challenging requirements or significant unknowns, use milestones to implement proof of concepts, "toy implementations", etc., that allow validating whether the user's proposal is feasible. Read the source code of libraries by finding or acquiring them, research deeply, and include prototypes to guide a fuller implementation.
+要件が難しい設計や不確実性の高い調査では、マイルストーンを使って概念実証（PoC）や「試作実装」を行い、ユーザー提案の実現可能性を検証してください。必要なライブラリはソースコードを取得または参照して深く調査し、より完全な実装を導くためのプロトタイプを含めてください。
 
-## Requirements
+## 要件
 
-NON-NEGOTIABLE REQUIREMENTS:
+**絶対要件（NON-NEGOTIABLE REQUIREMENTS）:**
 
-* Every ExecPlan must be fully self-contained. Self-contained means that in its current form it contains all knowledge and instructions needed for a novice to succeed.
-* Every ExecPlan is a living document. Contributors are required to revise it as progress is made, as discoveries occur, and as design decisions are finalized. Each revision must remain fully self-contained.
-* Every ExecPlan must enable a complete novice to implement the feature end-to-end without prior knowledge of this repo.
-* Every ExecPlan must produce a demonstrably working behavior, not merely code changes to "meet a definition".
-* Every ExecPlan must define every term of art in plain language or do not use it.
+* すべての ExecPlan は完全に自己完結していなければなりません。自己完結とは、現在の文書だけで初学者が成功するために必要な知識と手順をすべて含むことです。
+* すべての ExecPlan は生きた文書です。進捗・発見・設計決定の確定に応じて、常に改訂する必要があります。改訂後も自己完結性を維持してください。
+* すべての ExecPlan は、このリポジトリの事前知識がない初学者でも、機能をエンドツーエンドで実装できる内容でなければなりません。
+* すべての ExecPlan は、単なる「定義を満たすコード変更」ではなく、実際に動作を確認できる成果を生み出さなければなりません。
+* すべての ExecPlan は、専門用語を平易な言葉で定義してください。定義できない用語は使わないでください。
 
-Purpose and intent come first. Begin by explaining, in a few sentences, why the work matters from a user's perspective: what someone can do after this change that they could not do before, and how to see it working. Then guide the reader through the exact steps to achieve that outcome, including what to edit, what to run, and what they should observe.
+まず目的と意図を示すことを最優先にしてください。変更後にユーザー視点で何ができるようになるのか、どう動作確認するのかを数文で説明します。その上で、どのファイルを編集し、どのコマンドを実行し、何を観測すべきかを、結果に到達する正確な手順として案内してください。
 
-The agent executing your plan can list files, read files, search, run the project, and run tests. It does not know any prior context and cannot infer what you meant from earlier milestones. Repeat any assumption you rely on. Do not point to external blogs or docs; if knowledge is required, embed it in the plan itself in your own words. If an ExecPlan builds upon a prior ExecPlan and that file is checked in, incorporate it by reference. If it is not, you must include all relevant context from that plan.
+計画を実行するエージェントは、ファイル一覧、読取、検索、プロジェクト実行、テスト実行が可能です。一方で、過去コンテキストは知らず、以前のマイルストーンの意図を推測できません。依存する前提は必ず明記し、必要なら繰り返してください。外部ブログや外部ドキュメントへの参照に依存してはいけません。必要知識はこの計画内にあなたの言葉で埋め込んでください。既存の ExecPlan を土台にする場合、そのファイルがリポジトリに存在するなら参照できます。存在しない場合は、必要文脈をすべて本計画に含めてください。
 
-## Formatting
+## 書式
 
-Format and envelope are simple and strict. Each ExecPlan must be one single fenced code block labeled as `md` that begins and ends with triple backticks. Do not nest additional triple-backtick code fences inside; when you need to show commands, transcripts, diffs, or code, present them as indented blocks within that single fence. Use indentation for clarity rather than code fences inside an ExecPlan to avoid prematurely closing the ExecPlan's code fence. Use two newlines after every heading, use # and ## and so on, and correct syntax for ordered and unordered lists.
+書式ルールは簡潔かつ厳格です。各 ExecPlan は `md` ラベル付きの単一の fenced code block（先頭と末尾が triple backticks）として記述してください。内部に追加の triple-backtick フェンスをネストしてはいけません。コマンド、実行ログ、差分、コードを示す場合は、同じフェンス内でインデント記法を使って示してください。ExecPlan 内で追加フェンスを使うと、コードブロックが意図せず終了するためです。各見出しの後には 2 行空け、`#`、`##` などの Markdown 構文と、順序あり／なしリストの正しい記法を使用してください。
 
-When writing an ExecPlan to a Markdown (.md) file where the content of the file *is only* the single ExecPlan, you should omit the triple backticks.
+ExecPlan の内容だけを記載する Markdown（`.md`）ファイルに書き出す場合は、triple backticks を省略してください。
 
-Write in plain prose. Prefer sentences over lists. Avoid checklists, tables, and long enumerations unless brevity would obscure meaning. Checklists are permitted only in the `Progress` section, where they are mandatory. Narrative sections must remain prose-first.
+文体は平易な散文で書いてください。箇条書きより文を優先します。簡潔さを損なわない限り、チェックリスト・表・長い列挙は避けてください。チェックリストが許されるのは `Progress` セクションのみで、そこでは必須です。説明セクションは散文中心である必要があります。
 
-## Guidelines
+## ガイドライン
 
-Self-containment and plain language are paramount. If you introduce a phrase that is not ordinary English ("daemon", "middleware", "RPC gateway", "filter graph"), define it immediately and remind the reader how it manifests in this repository (for example, by naming the files or commands where it appears). Do not say "as defined previously" or "according to the architecture doc." Include the needed explanation here, even if you repeat yourself.
+自己完結性と平易な言葉を最優先してください。一般的でない用語（例: "daemon", "middleware", "RPC gateway", "filter graph"）を導入する場合は、その場で定義し、このリポジトリ内でどう現れるか（該当ファイルやコマンド）を示してください。「前に定義した通り」「設計ドキュメントに従って」などの参照に頼ってはいけません。必要な説明は繰り返してでもこの文書内に書いてください。
 
-Avoid common failure modes. Do not rely on undefined jargon. Do not describe "the letter of a feature" so narrowly that the resulting code compiles but does nothing meaningful. Do not outsource key decisions to the reader. When ambiguity exists, resolve it in the plan itself and explain why you chose that path. Err on the side of over-explaining user-visible effects and under-specifying incidental implementation details.
+よくある失敗を回避してください。未定義の専門用語に依存しないこと。機能の「形式」だけを満たし、コンパイルは通るが意味のある挙動がない状態を避けること。重要な判断を読者へ丸投げしないこと。曖昧さがある場合は計画内で解決し、なぜその方針を選んだかを説明してください。ユーザーが観測できる効果は丁寧に、実装の些末な詳細は必要最小限に記述するのが原則です。
 
-Anchor the plan with observable outcomes. State what the user can do after implementation, the commands to run, and the outputs they should see. Acceptance should be phrased as behavior a human can verify ("after starting the server, navigating to [http://localhost:8080/health](http://localhost:8080/health) returns HTTP 200 with body OK") rather than internal attributes ("added a HealthCheck struct"). If a change is internal, explain how its impact can still be demonstrated (for example, by running tests that fail before and pass after, and by showing a scenario that uses the new behavior).
+計画は観測可能な成果に結びつけてください。実装後にユーザーが何をできるか、どのコマンドを実行するか、どの出力が出るかを明示します。受け入れ条件は内部属性ではなく、人が検証できる振る舞いとして表現してください（例: 「サーバー起動後に [http://localhost:8080/health](http://localhost:8080/health) へアクセスすると HTTP 200 と `OK` が返る」）。変更が内部実装中心でも、テストの失敗→成功や具体的シナリオで効果を示せるようにしてください。
 
-Specify repository context explicitly. Name files with full repository-relative paths, name functions and modules precisely, and describe where new files should be created. If touching multiple areas, include a short orientation paragraph that explains how those parts fit together so a novice can navigate confidently. When running commands, show the working directory and exact command line. When outcomes depend on environment, state the assumptions and provide alternatives when reasonable.
+リポジトリ文脈は明示的に書いてください。ファイルパスはリポジトリ相対で完全に記述し、関数・モジュール名も正確に示します。新規ファイルを作る場合は作成場所を明記してください。複数箇所に変更が及ぶ場合は、それらの関係を短い導入文で示し、初学者が迷わないようにします。コマンドには作業ディレクトリと正確なコマンドラインを示してください。環境依存の結果がある場合は前提を明記し、可能なら代替案も示します。
 
-Be idempotent and safe. Write the steps so they can be run multiple times without causing damage or drift. If a step can fail halfway, include how to retry or adapt. If a migration or destructive operation is necessary, spell out backups or safe fallbacks. Prefer additive, testable changes that can be validated as you go.
+冪等性と安全性を確保してください。手順は複数回実行しても壊れないように書きます。途中失敗が起こりうる手順には、再実行や復旧方法を含めてください。マイグレーションや破壊的操作が必要な場合は、バックアップまたは安全なフォールバック手順を明記します。進行中に検証しやすい、加算的でテスト可能な変更を優先してください。
 
-Validation is not optional. Include instructions to run tests, to start the system if applicable, and to observe it doing something useful. Describe comprehensive testing for any new features or capabilities. Include expected outputs and error messages so a novice can tell success from failure. Where possible, show how to prove that the change is effective beyond compilation (for example, through a small end-to-end scenario, a CLI invocation, or an HTTP request/response transcript). State the exact test commands appropriate to the project’s toolchain and how to interpret their results.
+検証は必須です。必要に応じてテスト実行、システム起動、実際に有用な挙動を観測する手順を含めてください。新機能・新能力に対しては、包括的なテスト方針を示します。期待出力やエラーメッセージを示し、初学者が成功／失敗を判定できるようにします。可能であれば、単なるコンパイル成功を超えて有効性を示す証拠（小さな E2E シナリオ、CLI 実行、HTTP リクエスト／レスポンス記録など）を含めてください。プロジェクトのツールチェーンに合った正確なテストコマンドと、結果の読み取り方を記載します。
 
-Capture evidence. When your steps produce terminal output, short diffs, or logs, include them inside the single fenced block as indented examples. Keep them concise and focused on what proves success. If you need to include a patch, prefer file-scoped diffs or small excerpts that a reader can recreate by following your instructions rather than pasting large blobs.
+証跡を残してください。手順で生成したターミナル出力、短い diff、ログは、単一の fenced block 内にインデント例として含めます。内容は簡潔にし、成功を証明する情報に絞ってください。パッチを含める必要がある場合は、大量貼り付けより、ファイル単位の差分や小さな抜粋を優先し、読者が手順から再現できるようにしてください。
 
-## Milestones
+## マイルストーン
 
-Milestones are narrative, not bureaucracy. If you break the work into milestones, introduce each with a brief paragraph that describes the scope, what will exist at the end of the milestone that did not exist before, the commands to run, and the acceptance you expect to observe. Keep it readable as a story: goal, work, result, proof. Progress and milestones are distinct: milestones tell the story, progress tracks granular work. Both must exist. Never abbreviate a milestone merely for the sake of brevity, do not leave out details that could be crucial to a future implementation.
+マイルストーンは事務処理ではなく物語です。作業をマイルストーンへ分割する場合、各マイルストーンを短い段落で導入し、スコープ、完了時に新たに存在するもの、実行コマンド、観測予定の受け入れ条件を説明してください。読みやすさは「目標 → 作業 → 結果 → 証明」の流れで保ちます。`Progress` とマイルストーンは別物です。マイルストーンは全体像の物語、`Progress` は粒度の細かい進捗管理です。両方とも必須です。簡潔さのためだけにマイルストーンを省略・簡略化してはいけません。将来の実装で重要になり得る詳細は省かないでください。
 
-Each milestone must be independently verifiable and incrementally implement the overall goal of the execution plan.
+各マイルストーンは、独立して検証可能であり、かつ実行計画全体の目標を段階的に達成する内容でなければなりません。
 
-## Living plans and design decisions
+## 生きた計画と設計判断
 
-* ExecPlans are living documents. As you make key design decisions, update the plan to record both the decision and the thinking behind it. Record all decisions in the `Decision Log` section.
-* ExecPlans must contain and maintain a `Progress` section, a `Surprises & Discoveries` section, a `Decision Log`, and an `Outcomes & Retrospective` section. These are not optional.
-* When you discover optimizer behavior, performance tradeoffs, unexpected bugs, or inverse/unapply semantics that shaped your approach, capture those observations in the `Surprises & Discoveries` section with short evidence snippets (test output is ideal).
-* If you change course mid-implementation, document why in the `Decision Log` and reflect the implications in `Progress`. Plans are guides for the next contributor as much as checklists for you.
-* At completion of a major task or the full plan, write an `Outcomes & Retrospective` entry summarizing what was achieved, what remains, and lessons learned.
+* ExecPlan は生きた文書です。重要な設計判断を行ったら、判断内容とその思考過程を計画へ追記してください。すべての判断は `Decision Log` セクションに記録します。
+* ExecPlan には `Progress`、`Surprises & Discoveries`、`Decision Log`、`Outcomes & Retrospective` の各セクションを必ず含め、継続的に更新してください。これらは省略不可です。
+* オプティマイザの挙動、性能トレードオフ、予期しないバグ、逆変換／取り消し（unapply）のような実装方針に影響した発見は、`Surprises & Discoveries` に短い証拠（理想はテスト出力）付きで記録してください。
+* 実装途中で方針変更した場合は、`Decision Log` に理由を記録し、その影響を `Progress` に反映してください。計画は自分用チェックリストであると同時に、次の貢献者向けガイドでもあります。
+* 大きなタスクまたは計画全体の完了時には、`Outcomes & Retrospective` に達成内容、残課題、学びを要約して追記してください。
 
-# Prototyping milestones and parallel implementations
+# プロトタイピング・マイルストーンと並行実装
 
-It is acceptable—-and often encouraged—-to include explicit prototyping milestones when they de-risk a larger change. Examples: adding a low-level operator to a dependency to validate feasibility, or exploring two composition orders while measuring optimizer effects. Keep prototypes additive and testable. Clearly label the scope as “prototyping”; describe how to run and observe results; and state the criteria for promoting or discarding the prototype.
+大きな変更のリスクを下げるために、明示的なプロトタイピング・マイルストーンを含めることは許容され、しばしば推奨されます。例として、実現可能性を確かめるために依存ライブラリへ低レベル演算子を追加する、あるいは 2 つの構成順序を試してオプティマイザ効果を比較する、などがあります。プロトタイプは加算的かつテスト可能に保ってください。スコープは「プロトタイピング」と明示し、実行・観測方法と、採用／破棄の判断基準を記述してください。
 
-Prefer additive code changes followed by subtractions that keep tests passing. Parallel implementations (e.g., keeping an adapter alongside an older path during migration) are fine when they reduce risk or enable tests to continue passing during a large migration. Describe how to validate both paths and how to retire one safely with tests. When working with multiple new libraries or feature areas, consider creating spikes that evaluate the feasibility of these features _independently_ of one another, proving that the external library performs as expected and implements the features we need in isolation.
+基本方針は、加算的な変更を入れ、テストが通る状態を保ちながら後で不要部分を削除することです。並行実装（例: 大規模移行中に旧経路と新しいアダプタ経路を共存させる）は、リスク低減やテスト継続に有効なら許容されます。両経路の検証方法と、片方を安全に廃止する手順をテストとともに説明してください。複数の新ライブラリや機能領域を扱う場合は、相互依存を分離したスパイク実装を作り、それぞれの外部ライブラリが期待通りに機能を提供することを個別に証明することを検討してください。
 
-## Skeleton of a Good ExecPlan
+## 良い ExecPlan の骨子
 
-    # <Short, action-oriented description>
+    # <短く行動志向の説明>
 
-    This ExecPlan is a living document. The sections `Progress`, `Surprises & Discoveries`, `Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work proceeds.
+    この ExecPlan は生きた文書です。`Progress`、`Surprises & Discoveries`、`Decision Log`、`Outcomes & Retrospective` は作業の進行に合わせて常に更新しなければなりません。
 
-    If PLANS.md file is checked into the repo, reference the path to that file here from the repository root and note that this document must be maintained in accordance with PLANS.md.
+    もし PLANS.md がリポジトリに存在する場合は、リポジトリルートからのパスをここに記載し、この文書が PLANS.md に従って維持される必要があることを明記してください。
 
     ## Purpose / Big Picture
 
-    Explain in a few sentences what someone gains after this change and how they can see it working. State the user-visible behavior you will enable.
+    この変更後に利用者が得られる価値と、動作確認方法を数文で説明します。実現するユーザー可視の挙動を明示してください。
 
     ## Progress
 
-    Use a list with checkboxes to summarize granular steps. Every stopping point must be documented here, even if it requires splitting a partially completed task into two (“done” vs. “remaining”). This section must always reflect the actual current state of the work.
+    粒度の細かい作業をチェックボックス付きリストで要約します。停止点ごとに必ず更新し、途中作業は必要に応じて「完了済み」と「残作業」に分割して記録してください。このセクションは常に実際の進捗を反映している必要があります。
 
-    - [x] (2025-10-01 13:00Z) Example completed step.
-    - [ ] Example incomplete step.
-    - [ ] Example partially completed step (completed: X; remaining: Y).
+    - [x] (2025-10-01 13:00Z) 完了した作業の例。
+    - [ ] 未完了作業の例。
+    - [ ] 一部完了の作業例（完了: X、残: Y）。
 
-    Use timestamps to measure rates of progress.
+    進捗速度を測るため、タイムスタンプを使ってください。
 
     ## Surprises & Discoveries
 
-    Document unexpected behaviors, bugs, optimizations, or insights discovered during implementation. Provide concise evidence.
+    実装中に見つかった予期しない挙動、バグ、最適化、気づきを記録し、簡潔な証拠を添えてください。
 
     - Observation: …
       Evidence: …
 
     ## Decision Log
 
-    Record every decision made while working on the plan in the format:
+    作業中に行ったすべての判断を次の形式で記録してください。
 
     - Decision: …
       Rationale: …
@@ -109,42 +109,42 @@ Prefer additive code changes followed by subtractions that keep tests passing. P
 
     ## Outcomes & Retrospective
 
-    Summarize outcomes, gaps, and lessons learned at major milestones or at completion. Compare the result against the original purpose.
+    主要マイルストーン時または完了時に、成果、不足、学びを要約し、当初目的と比較してください。
 
     ## Context and Orientation
 
-    Describe the current state relevant to this task as if the reader knows nothing. Name the key files and modules by full path. Define any non-obvious term you will use. Do not refer to prior plans.
+    読者が何も知らない前提で、このタスクに必要な現状を説明します。重要なファイルやモジュールは完全パスで記載し、分かりにくい用語は定義してください。過去の計画へ参照しないでください。
 
     ## Plan of Work
 
-    Describe, in prose, the sequence of edits and additions. For each edit, name the file and location (function, module) and what to insert or change. Keep it concrete and minimal.
+    編集・追加の順序を散文で説明します。各編集について、対象ファイル、場所（関数・モジュール）、追加／変更内容を明記してください。具体的かつ最小限に書きます。
 
     ## Concrete Steps
 
-    State the exact commands to run and where to run them (working directory). When a command generates output, show a short expected transcript so the reader can compare. This section must be updated as work proceeds.
+    実行する正確なコマンドと作業ディレクトリを示します。コマンドが出力を生成する場合は、読者が比較できる短い期待ログを示してください。このセクションは作業進行に応じて更新が必要です。
 
     ## Validation and Acceptance
 
-    Describe how to start or exercise the system and what to observe. Phrase acceptance as behavior, with specific inputs and outputs. If tests are involved, say "run <project’s test command> and expect <N> passed; the new test <name> fails before the change and passes after>".
+    システムの起動・操作方法と観測ポイントを記述します。受け入れ条件は、具体的な入力と出力を持つ挙動として書いてください。テストが関与する場合は、「`<project の test コマンド>` を実行し `<N>` 件成功を期待。新規テスト `<name>` は変更前に失敗し変更後に成功する」と明記してください。
 
     ## Idempotence and Recovery
 
-    If steps can be repeated safely, say so. If a step is risky, provide a safe retry or rollback path. Keep the environment clean after completion.
+    手順を安全に繰り返せる場合はそう記載します。リスクがある手順には安全な再試行またはロールバック方法を提供してください。完了後は環境をクリーンに保ちます。
 
     ## Artifacts and Notes
 
-    Include the most important transcripts, diffs, or snippets as indented examples. Keep them concise and focused on what proves success.
+    最重要の実行ログ、差分、抜粋をインデント例として含めてください。簡潔にし、成功証明に必要な情報へ絞ります。
 
     ## Interfaces and Dependencies
 
-    Be prescriptive. Name the libraries, modules, and services to use and why. Specify the types, traits/interfaces, and function signatures that must exist at the end of the milestone. Prefer stable names and paths such as `crate::module::function` or `package.submodule.Interface`. E.g.:
+    指示は具体的にしてください。使用するライブラリ、モジュール、サービスとその理由を示します。マイルストーン終了時に存在すべき型、trait／interface、関数シグネチャを明示してください。`crate::module::function` や `package.submodule.Interface` のように、安定した名前とパスを優先してください。例:
 
-    In crates/foo/planner.rs, define:
+    `crates/foo/planner.rs` で次を定義:
 
         pub trait Planner {
             fn plan(&self, observed: &Observed) -> Vec<Action>;
         }
 
-If you follow the guidance above, a single, stateless agent -- or a human novice -- can read your ExecPlan from top to bottom and produce a working, observable result. That is the bar: SELF-CONTAINED, SELF-SUFFICIENT, NOVICE-GUIDING, OUTCOME-FOCUSED.
+上記ガイドラインに従えば、状態を持たない単一エージェント、または人間の初学者であっても、ExecPlan を先頭から末尾まで読んで、動作が確認できる成果へ到達できます。目標水準は次の通りです: **自己完結（SELF-CONTAINED）・自律実行可能（SELF-SUFFICIENT）・初学者を導ける（NOVICE-GUIDING）・成果志向（OUTCOME-FOCUSED）**。
 
-When you revise a plan, you must ensure your changes are comprehensively reflected across all sections, including the living document sections, and you must write a note at the bottom of the plan describing the change and the reason why. ExecPlans must describe not just the what but the why for almost everything.
+計画を改訂する際は、変更内容を生きた文書セクションを含む全セクションへ漏れなく反映し、計画末尾に「何を」「なぜ」変更したかのノートを必ず追加してください。ExecPlan では、ほぼすべての事項について「何をしたか」だけでなく「なぜそうしたか」まで説明する必要があります。
