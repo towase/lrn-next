@@ -1,14 +1,29 @@
+"use client";
+
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createTaskAction } from "@/features/task/actions";
+import {
+  createTaskAction,
+  type TaskActionResult,
+} from "@/features/task/actions";
+
+const INITIAL_STATE: TaskActionResult = { ok: true };
 
 export function TaskCreateForm() {
+  const [state, formAction] = useActionState(
+    async (_prevState: TaskActionResult, formData: FormData) =>
+      createTaskAction(formData),
+    INITIAL_STATE,
+  );
+
   return (
     <Card>
       <CardContent>
-        <form action={createTaskAction} className="grid gap-3">
+        <form action={formAction} className="grid gap-3">
           <div className="grid gap-2">
             <label
               htmlFor="title"
@@ -41,11 +56,22 @@ export function TaskCreateForm() {
               className="bg-white text-zinc-900 placeholder:text-zinc-500"
             />
           </div>
-          <Button type="submit" className="w-fit">
-            タスクを追加
-          </Button>
+          {!state.ok && state.message ? (
+            <p className="text-xs text-red-700">{state.message}</p>
+          ) : null}
+          <SubmitButton />
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" className="w-fit" disabled={pending}>
+      {pending ? "追加中..." : "タスクを追加"}
+    </Button>
   );
 }

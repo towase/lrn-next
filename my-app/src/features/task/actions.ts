@@ -9,6 +9,11 @@ import {
   updateTaskStatusById,
 } from "@/features/task/repository";
 
+export type TaskActionResult = {
+  ok: boolean;
+  message?: string;
+};
+
 const createTaskSchema = z.object({
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().max(500).optional(),
@@ -23,45 +28,66 @@ const deleteTaskSchema = z.object({
   id: z.string().min(1),
 });
 
-export async function createTaskAction(formData: FormData) {
+export async function createTaskAction(
+  formData: FormData,
+): Promise<TaskActionResult> {
   const parsed = createTaskSchema.safeParse({
     title: toStringValue(formData.get("title")),
     description: toOptionalStringValue(formData.get("description")),
   });
 
   if (!parsed.success) {
-    return;
+    return { ok: false, message: "入力値が不正です。" };
   }
 
-  await createTask(parsed.data);
-  revalidatePath("/tasks");
+  try {
+    await createTask(parsed.data);
+    revalidatePath("/tasks");
+    return { ok: true };
+  } catch {
+    return { ok: false, message: "タスク作成に失敗しました。" };
+  }
 }
 
-export async function updateTaskStatusAction(formData: FormData) {
+export async function updateTaskStatusAction(
+  formData: FormData,
+): Promise<TaskActionResult> {
   const parsed = updateTaskStatusSchema.safeParse({
     id: toStringValue(formData.get("id")),
     status: toStringValue(formData.get("status")),
   });
 
   if (!parsed.success) {
-    return;
+    return { ok: false, message: "入力値が不正です。" };
   }
 
-  await updateTaskStatusById(parsed.data.id, parsed.data.status);
-  revalidatePath("/tasks");
+  try {
+    await updateTaskStatusById(parsed.data.id, parsed.data.status);
+    revalidatePath("/tasks");
+    return { ok: true };
+  } catch {
+    return { ok: false, message: "ステータス更新に失敗しました。" };
+  }
 }
 
-export async function deleteTaskAction(formData: FormData) {
+export async function deleteTaskAction(
+  formData: FormData,
+): Promise<TaskActionResult> {
   const parsed = deleteTaskSchema.safeParse({
     id: toStringValue(formData.get("id")),
   });
 
   if (!parsed.success) {
-    return;
+    return { ok: false, message: "入力値が不正です。" };
   }
 
-  await deleteTaskById(parsed.data.id);
-  revalidatePath("/tasks");
+  try {
+    await deleteTaskById(parsed.data.id);
+    revalidatePath("/tasks");
+    return { ok: true };
+  } catch {
+    return { ok: false, message: "タスク削除に失敗しました。" };
+  }
 }
 
 function toStringValue(value: FormDataEntryValue | null) {
