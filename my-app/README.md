@@ -37,9 +37,18 @@ pnpm db:down      # Postgres停止
 pnpm db:logs      # Postgresログ表示
 pnpm db:generate  # Prisma Client生成
 pnpm db:migrate   # マイグレーション作成 + 適用
+pnpm db:migrate:deploy # マイグレーション適用（本番向け）
 pnpm db:push      # スキーマをDBへ反映
 pnpm db:studio    # Prisma Studio起動
 ```
+
+## デプロイ
+
+- Vercel へ出す前に [docs/vercel-deploy-checklist.md](docs/vercel-deploy-checklist.md) を確認してください。
+
+## パフォーマンス計測
+
+- Day10 の bundle 分析結果は [docs/day10-bundle-analysis.md](docs/day10-bundle-analysis.md) を参照してください。
 
 ## ディレクトリ構成
 

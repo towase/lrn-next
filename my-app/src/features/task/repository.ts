@@ -1,4 +1,4 @@
-import type { TaskStatus } from "@prisma/client";
+import type { TaskStatus } from "@/features/task/types";
 import { prisma } from "@/lib/prisma";
 
 type CreateTaskInput = {

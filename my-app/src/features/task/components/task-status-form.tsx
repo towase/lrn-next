@@ -1,8 +1,8 @@
 "use client";
 
-import type { TaskStatus } from "@prisma/client";
 import { useOptimistic, useState, useTransition } from "react";
 import { updateTaskStatusAction } from "@/features/task/actions";
+import type { TaskStatus } from "@/features/task/types";
 import { TASK_STATUS_OPTIONS } from "@/features/task/types";
 
 type TaskStatusFormProps = {

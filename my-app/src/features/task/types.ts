@@ -1,4 +1,6 @@
-import { TaskStatus } from "@prisma/client";
+export const TASK_STATUS_VALUES = ["TODO", "IN_PROGRESS", "DONE"] as const;
+
+export type TaskStatus = (typeof TASK_STATUS_VALUES)[number];
 
 export type TaskEntity = {
   id: string;
@@ -15,8 +17,8 @@ export const TASK_STATUS_LABEL: Record<TaskStatus, string> = {
   DONE: "完了",
 };
 
-export const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
-  { value: TaskStatus.TODO, label: TASK_STATUS_LABEL.TODO },
-  { value: TaskStatus.IN_PROGRESS, label: TASK_STATUS_LABEL.IN_PROGRESS },
-  { value: TaskStatus.DONE, label: TASK_STATUS_LABEL.DONE },
-];
+export const TASK_STATUS_OPTIONS: { value: TaskStatus; label: string }[] =
+  TASK_STATUS_VALUES.map((value) => ({
+    value,
+    label: TASK_STATUS_LABEL[value],
+  }));

@@ -1,6 +1,5 @@
 "use server";
 
-import { TaskStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import {
@@ -8,6 +7,7 @@ import {
   deleteTaskById,
   updateTaskStatusById,
 } from "@/features/task/repository";
+import { TASK_STATUS_VALUES } from "@/features/task/types";
 
 export type TaskActionResult = {
   ok: boolean;
@@ -21,7 +21,7 @@ const createTaskSchema = z.object({
 
 const updateTaskStatusSchema = z.object({
   id: z.string().min(1),
-  status: z.enum(TaskStatus),
+  status: z.enum(TASK_STATUS_VALUES),
 });
 
 const deleteTaskSchema = z.object({

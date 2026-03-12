@@ -18,9 +18,9 @@
 - [x] (2026-03-12 12:25 JST) Server Actions のエラーハンドリング（create/update/delete の戻り値統一、UI表示）を追加済み。
 - [x] (2026-03-12 15:10 JST) Day8 Middleware で `/tasks` と配下ルートの保護を実装。
 - [x] (2026-03-12 15:10 JST) Day8 擬似ログイン/ログアウト導線を追加し、cookie ベース制御を確認。
-- [ ] Day9 Vercel デプロイ前提の設定確認（環境変数・DB接続・ビルド確認手順）を文書化。
-- [ ] Day10 bundle 分析を実施し、主要ボトルネック候補と対策を整理。
-- [ ] 最終の総合検証（`pnpm lint`、`pnpm build`、主要画面確認）を実施。
+- [x] (2026-03-12 15:49 JST) Day9 Vercel デプロイ前提の設定確認（環境変数・DB接続・ビルド確認手順）を文書化。
+- [x] (2026-03-12 16:26 JST) Day10 bundle 分析を実施し、主要ボトルネック候補（Prisma runtime混入）を解消。
+- [x] (2026-03-12 16:26 JST) 最終の総合検証（`pnpm lint`、`pnpm build`、主要画面HTTP確認）を実施。
 
 ## Surprises & Discoveries
 
@@ -32,6 +32,15 @@
 
 - Observation: Proxy を `/tasks/:path*` に限定することで、学習用ページ（`/fetch-compare` など）は認証不要のまま維持できた。
   Evidence: `matcher` を限定した `proxy.ts` 追加後も `next build` で通常ルートが維持され、`/tasks` 系のみ保護対象になった。
+
+- Observation: このアプリのデプロイ前提は `DATABASE_URL` 1 つに集約されており、Prisma 接続条件が明確だった。
+  Evidence: `src/lib/prisma.ts` と `prisma.config.ts` の参照変数が `DATABASE_URL` のみだった。
+
+- Observation: `/tasks` のクライアント chunk に Prisma runtime が混入し、追加 JS を押し上げていた。
+  Evidence: `types.ts` で `@prisma/client` を runtime import しており、改善前 `/tasks` 追加 JS は 90.2KB だった。
+
+- Observation: `TaskStatus` をローカル const union へ置換すると `/tasks` 追加 JS が 47.0KB まで減少した。
+  Evidence: 同一計測手順で改善前 90.2KB → 改善後 47.0KB（-43.2KB）を確認。
 
 ## Decision Log
 
@@ -47,9 +56,17 @@
   Rationale: `/tasks` 保護の挙動を単純に保ちつつ、ログイン後に元のページへ戻す導線を学習しやすくするため。
   Date/Author: 2026-03-12 / Codex
 
+- Decision: Day9 ではデプロイ手順を README 分離ではなく `docs/vercel-deploy-checklist.md` に独立させる。
+  Rationale: 実行手順をチェックリスト化して、Vercel 設定とスモークテストを再利用しやすくするため。
+  Date/Author: 2026-03-12 / Codex
+
+- Decision: shared 型定義から Prisma enum の runtime import を排除し、`TASK_STATUS_VALUES` を唯一のクライアント参照にする。
+  Rationale: Client Component 側への Prisma runtime 混入を防ぎ、`/tasks` の配信 JS を削減するため。
+  Date/Author: 2026-03-12 / Codex
+
 ## Outcomes & Retrospective
 
-Day8 は完了しました。`/tasks` 系は未認証アクセス時に `/auth` へリダイレクトされ、`auth-token` cookie 発行後のみ閲覧可能です。残作業は Day9（デプロイ前提整理）と Day10（bundle 分析）です。
+Day2-10 は完了しました。`/tasks` 系の保護、Vercel デプロイ前提、bundle 分析と改善、`lint/build` と保護挙動の HTTP 検証まで完了しています。
 
 ## Context and Orientation
 
@@ -62,7 +79,7 @@ Day8 は完了しました。`/tasks` 系は未認証アクセス時に `/auth` 
 - `my-app/src/features/task/components/*`: タスク UI
 - `my-app/src/features/task/repository.ts`: Prisma 経由の DB 操作
 
-未実装の中心は Day8（保護制御）と Day9（デプロイ準備）と Day10（bundle 分析）です。
+未実装項目はありません。以降は必要に応じて改善サイクルを回します。
 
 ## Plan of Work
 
@@ -129,6 +146,33 @@ Day8 実装時点の記録:
   - `pnpm lint`: `Checked 46 files ... No fixes applied.`
   - `pnpm build`: `✓ Compiled successfully`、`ƒ /auth` と `ƒ Proxy (Middleware)` を確認。
 
+Day9 実装時点の記録:
+
+- 主要差分ファイル:
+  - `my-app/docs/vercel-deploy-checklist.md`
+  - `my-app/package.json`
+  - `my-app/README.md`
+- 実装要点:
+  - Vercel 前提（環境変数・Build Command・スモークテスト）を文書化。
+  - `pnpm db:migrate:deploy` を script 化し、Build Command へ組み込みやすくした。
+
+Day10 実装時点の記録:
+
+- 主要差分ファイル:
+  - `my-app/docs/day10-bundle-analysis.md`
+  - `my-app/src/features/task/types.ts`
+  - `my-app/src/features/task/actions.ts`
+  - `my-app/src/features/task/repository.ts`
+  - `my-app/src/features/task/components/task-status-form.tsx`
+- 検証ログ要点:
+  - `/tasks` route 追加 JS: `90.2KB -> 47.0KB`（-43.2KB）
+  - `pnpm lint`: `Checked 46 files ... No fixes applied.`
+  - `pnpm build`: `✓ Compiled successfully`
+  - `curl -I /tasks`: `307 /auth?next=%2Ftasks`
+  - `curl -I /tasks/abc`: `307 /auth?next=%2Ftasks%2Fabc`
+  - `curl -I /fetch-compare`: `200 OK`
+  - `curl -I (Cookie: auth-token=demo-user) /tasks`: `200 OK`
+
 ## Interfaces and Dependencies
 
 この計画で主要に扱うインターフェースは次の通りです。
@@ -141,9 +185,12 @@ Day8 実装時点の記録:
   - ログアウト時 `delete`
 - `my-app/src/features/task/actions.ts`
   - `createTaskAction`, `updateTaskStatusAction`, `deleteTaskAction`
-- Day10 の分析用コマンド（プロジェクトの scripts か `ANALYZE=true pnpm build` など、実環境に合わせて確定）
+- Day10 の分析用コマンド: `pnpm build` + `.next` manifest/chunk サイズ集計
 
 ## Change Notes
 
 - 2026-03-12: 新規作成。理由は「学習ロードマップ完走までを 1 つの ExecPlan で追跡するため」。
 - 2026-03-12: Day8 完了を反映。理由は「`/tasks` 保護と擬似認証導線の実装・検証が完了したため」。
+- 2026-03-12: Day9 完了を反映。理由は「Vercel デプロイ前提をチェックリスト化し、migration deploy の実行経路を追加したため」。
+- 2026-03-12: Day10 完了を反映。理由は「Prisma runtime 混入の解消で `/tasks` の追加 JS を削減したため」。
+- 2026-03-12: 最終検証完了を反映。理由は「`lint/build` 成功と `/tasks` 保護挙動のHTTP確認が完了したため」。
