@@ -1,4 +1,4 @@
-# lrn-next / my-app
+# lrn-next
 
 Next.js App Router + Server Actions + Prisma(Postgres) で作るタスク管理アプリです。
 

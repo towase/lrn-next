@@ -1,11 +1,11 @@
 # Vercel デプロイ前チェックリスト（Day9）
 
-このドキュメントは `my-app` を Vercel にデプロイする前提を、現状の実装に合わせて再実行可能な形でまとめたものです。
+このドキュメントは `lrn-next` を Vercel にデプロイする前提を、現状の実装に合わせて再実行可能な形でまとめたものです。
 
 ## 1. 事前に準備するもの
 
-- GitHub などに `my-app` を含むリポジトリが push 済みであること
-- Vercel プロジェクトを作成済みであること（Root Directory は `my-app`）
+- GitHub などにリポジトリが push 済みであること
+- Vercel プロジェクトを作成済みであること（Root Directory はリポジトリルート）
 - 本番用 PostgreSQL が用意されていること（Neon / Supabase / RDS など）
 
 ## 2. 必須環境変数
@@ -44,7 +44,6 @@ pnpm db:migrate:deploy
 リポジトリルートで次を実行します。
 
 ```bash
-cd my-app
 pnpm lint
 pnpm build
 ```

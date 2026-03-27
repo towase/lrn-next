@@ -3,12 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const appDir = path.resolve(scriptDir, "..");
-const repoRoot = path.resolve(appDir, "..");
-const configPath = path.join(repoRoot, "lefthook.yml");
+const projectRoot = path.resolve(scriptDir, "..");
+const configPath = path.join(projectRoot, "lefthook.yml");
 
 const result = spawnSync("pnpm", ["exec", "lefthook", "install"], {
-  cwd: appDir,
+  cwd: projectRoot,
   stdio: "inherit",
   env: {
     ...process.env,
