@@ -1,0 +1,29 @@
+lefthook: |
+  cd my-app
+  pnpm exec lefthook
+
+pre-commit:
+  parallel: false
+  commands:
+    format:
+      priority: 1
+      root: my-app/
+      glob:
+        - "my-app/*.{js,jsx,ts,tsx,json,css,md,mdx}"
+        - "my-app/**/*.{js,jsx,ts,tsx,json,css,md,mdx}"
+      run: pnpm format
+      stage_fixed: true
+    lint:
+      priority: 2
+      root: my-app/
+      glob:
+        - "my-app/*.{js,jsx,ts,tsx,json,css,md,mdx}"
+        - "my-app/**/*.{js,jsx,ts,tsx,json,css,md,mdx}"
+      run: pnpm lint
+    typecheck:
+      priority: 3
+      root: my-app/
+      glob:
+        - "my-app/*.{ts,tsx,mts,cts}"
+        - "my-app/**/*.{ts,tsx,mts,cts}"
+      run: pnpm typecheck
