@@ -21,6 +21,7 @@ Next.js App Router + Server Actions + Prisma(Postgres) で作るタスク管理�
 ```bash
 pnpm install
 cp .env.example .env
+pnpm db:generate
 pnpm db:up
 pnpm db:migrate --name init
 pnpm dev
