@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "pnpm db:migrate:deploy && pnpm build",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
